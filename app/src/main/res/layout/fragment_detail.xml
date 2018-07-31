@@ -1,0 +1,60 @@
+<FrameLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/version_name"
+            android:padding="16dp"
+            android:textSize="20dp"
+            android:textColor="#161616" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/version_number"
+            android:padding="16dp"
+            android:textSize="20dp"
+            android:textColor="#161616" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/version_released"
+            android:padding="16dp"
+            android:textSize="20dp"
+            android:textColor="#161616" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/version_api"
+            android:padding="16dp"
+            android:textSize="20dp"
+            android:textColor="#161616" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/version_distribution"
+            android:padding="16dp"
+            android:textSize="20dp"
+            android:textColor="#161616" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/isFav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_star_big_off"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp" />
+</FrameLayout>
+

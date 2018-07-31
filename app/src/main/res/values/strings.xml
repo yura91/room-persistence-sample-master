@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Room Persistent</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="exit_confirmation_text">Вы действительно хотите удалить элемент?</string>
+    <string name="main_activity_btn_click_here">Click Here!!</string>
+</resources>
