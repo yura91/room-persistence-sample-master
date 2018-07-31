@@ -1,7 +1,9 @@
 package com.nagarro.persistence.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,19 @@ public class DetailFragment extends Fragment implements GetDataContract.View {
     TextView txtVersion_released;
     TextView txtVersion_api;
     TextView txtDestribution;
+    ImageButton favourite;
+    public static String TAG = DetailFragment.class.getName();
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            VersionInfo versionInfo = intent.getParcelableExtra("version");
+            if (versionInfo.isFavourite()) {
+                favourite.setBackgroundResource(android.R.drawable.btn_star_big_on);
+            } else {
+                favourite.setBackgroundResource(android.R.drawable.btn_star_big_off);
+            }
+        }
+    };
 
     public DetailFragment() {
         // Required empty public constructor
@@ -42,6 +58,7 @@ public class DetailFragment extends Fragment implements GetDataContract.View {
         txtVersion_released = (TextView) view.findViewById(R.id.version_released);
         txtVersion_api = (TextView) view.findViewById(R.id.version_api);
         txtDestribution = (TextView) view.findViewById(R.id.version_distribution);
+        favourite = (ImageButton) view.findViewById(R.id.isFav);
         VersionInfo versionInfo = getArguments().getParcelable("versionInfo");
         txtVersion_name.setText(versionInfo.getVersion_name());
         txtVersion_number.setText(versionInfo.getVersion_number());
@@ -80,6 +97,13 @@ public class DetailFragment extends Fragment implements GetDataContract.View {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("com.journaldev.broadcastreceiver.FAV"));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @Override

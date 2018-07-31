@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,7 @@ public class VersionStatisticAdapter extends RecyclerView.Adapter<VersionStatist
     private Context context;
     private Presenter mPresenter;
     private List<VersionInfo> versionInfos = new ArrayList<>();
-
+    private boolean tabletSize;
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -50,6 +49,7 @@ public class VersionStatisticAdapter extends RecyclerView.Adapter<VersionStatist
         this.context = context;
         this.versionInfos = versionInfos;
         this.mPresenter = mPresenter;
+        tabletSize = context.getResources().getBoolean(R.bool.isTablet);
         context.registerReceiver(broadcastReceiver, new IntentFilter("com.journaldev.broadcastreceiver.SOME_ACTION"));
     }
 
@@ -97,22 +97,23 @@ public class VersionStatisticAdapter extends RecyclerView.Adapter<VersionStatist
                         versionInfos.get(getAdapterPosition()).setFavourite(true);
                         AppDatabase.getAppDatabase(context).userDao().updateVersionInfo(versionInfos.get(getAdapterPosition()));
                         itemView.findViewById(R.id.favourite).setBackgroundResource(android.R.drawable.btn_star_big_on);
-                        VersionInfo versionInfo = AppDatabase.getAppDatabase(context).userDao().findById(versionInfos.get(getAdapterPosition()).getUid());
-                        Log.d("hklhlk", "" + versionInfo.getUid());
-
                     } else {
                         if (!MainActivity.isFavourite) {
                             versionInfos.get(getAdapterPosition()).setFavourite(false);
                             AppDatabase.getAppDatabase(context).userDao().updateVersionInfo(versionInfos.get(getAdapterPosition()));
                             itemView.findViewById(R.id.favourite).setBackgroundResource(android.R.drawable.btn_star_big_off);
-                            VersionInfo versionInfo = AppDatabase.getAppDatabase(context).userDao().findById(versionInfos.get(getAdapterPosition()).getUid());
-                            Log.d("hklhlk", "" + versionInfo.getUid());
+
                         } else {
                             versionInfos.get(getAdapterPosition()).setFavourite(false);
                             AppDatabase.getAppDatabase(context).userDao().updateVersionInfo(versionInfos.get(getAdapterPosition()));
                             versionInfos.remove(getAdapterPosition());
                             notifyItemRemoved(getAdapterPosition());
                         }
+                    }
+                    if (tabletSize) {
+                        Intent intent = new Intent("com.journaldev.broadcastreceiver.FAV");
+                        intent.putExtra("version", versionInfos.get(getAdapterPosition()));
+                        context.sendBroadcast(intent);
                     }
                 }
             });
@@ -138,9 +139,13 @@ public class VersionStatisticAdapter extends RecyclerView.Adapter<VersionStatist
 
         @Override
         public void onClick(View v) {
-            Intent detailIntent = new Intent(context, DetailActivity.class);
-            detailIntent.putExtra("versionInfo", versionInfos.get(getAdapterPosition()));
-            context.startActivity(detailIntent);
+            if (tabletSize) {
+                ((MainActivity) context).showDetail(versionInfos.get(getAdapterPosition()));
+            } else {
+                Intent detailIntent = new Intent(context, DetailActivity.class);
+                detailIntent.putExtra("versionInfo", versionInfos.get(getAdapterPosition()));
+                context.startActivity(detailIntent);
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.nagarro.persistence.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -10,10 +11,12 @@ import android.view.MenuItem;
 import com.nagarro.persistence.R;
 import com.nagarro.persistence.database.AppDatabase;
 import com.nagarro.persistence.databinding.ActivityMainBinding;
+import com.nagarro.persistence.entity.VersionInfo;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
     public static boolean isFavourite;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,4 +72,28 @@ public class MainActivity extends AppCompatActivity {
         AppDatabase.destroyInstance();
         super.onDestroy();
     }
+
+    public void showDetail(VersionInfo versionInfo) {
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment newDetailFragment = null;
+        //Fragment cachedFragment = getSupportFragmentManager().findFragmentByTag(DetailFragment.TAG);
+        Bundle data = new Bundle();//Use bundle to pass data
+        data.putParcelable("versionInfo", versionInfo);
+        if (count == 0) {
+            newDetailFragment = new DetailFragment();
+            newDetailFragment.setArguments(data);
+            transaction
+                    .add(R.id.container2, newDetailFragment)
+                    .commit();
+        } else {
+            newDetailFragment = new DetailFragment();
+            newDetailFragment.setArguments(data);
+            transaction
+                    .replace(R.id.container2, newDetailFragment)
+                    .commit();
+        }
+        count = +1;
+    }
+
 }
