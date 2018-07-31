@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ public class VersionStatisticAdapter extends RecyclerView.Adapter<VersionStatist
     private Presenter mPresenter;
     private List<VersionInfo> versionInfos = new ArrayList<>();
     private boolean tabletSize;
+    int selectedPosition = -1;
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -68,8 +70,12 @@ public class VersionStatisticAdapter extends RecyclerView.Adapter<VersionStatist
             holder.isFavourite.setBackgroundResource(android.R.drawable.btn_star_big_on);
         } else {
             holder.isFavourite.setBackgroundResource(android.R.drawable.btn_star_big_off);
-
         }
+
+        if (selectedPosition == position)
+            holder.itemView.setBackgroundColor(Color.parseColor("#000000"));
+        else
+            holder.itemView.setBackgroundColor(Color.parseColor("#ffffff"));
     }
 
     @Override
@@ -140,7 +146,9 @@ public class VersionStatisticAdapter extends RecyclerView.Adapter<VersionStatist
         @Override
         public void onClick(View v) {
             if (tabletSize) {
+                selectedPosition = getAdapterPosition();
                 ((MainActivity) context).showDetail(versionInfos.get(getAdapterPosition()));
+                notifyDataSetChanged();
             } else {
                 Intent detailIntent = new Intent(context, DetailActivity.class);
                 detailIntent.putExtra("versionInfo", versionInfos.get(getAdapterPosition()));
