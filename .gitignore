@@ -7,3 +7,8 @@
 /build
 /captures
 .externalNativeBuild
+/.idea/
+
+.idea/shelf/
+app/src/main/res/drawable/
+src/main/res/drawable/
